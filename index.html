@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Französisch Vokabeltrainer
+  unite 6
+</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(120deg, #0f172a, #1e293b, #020617);
+  background-size: 300% 300%;
+  animation: bgMove 18s ease infinite;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Card */
+.container {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(35px);
+  border-radius: 28px;
+  padding: 48px;
+  width: 780px;
+  max-width: 95%;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+  animation: cardIn 1s ease;
+  position: relative;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(30px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+h1 {
+  font-size: 38px;
+  color: #f8fafc;
+  margin-bottom: 26px;
+}
+
+/* Settings Button */
+.settings-btn {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 14px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  transition: transform .3s ease, background .3s ease;
+}
+
+.settings-btn:hover {
+  transform: rotate(20deg) scale(1.1);
+  background: rgba(255,255,255,0.25);
+}
+
+/* Vocab */
+.vocab {
+  font-size: 34px;
+  font-weight: 600;
+  color: #e5e7eb;
+  margin: 32px 0 8px;
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+.vocab.fade {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Star */
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 34px;
+  cursor: pointer;
+  color: #facc15;
+  margin-bottom: 18px;
+  transition: transform .2s ease;
+}
+
+.star-btn:hover {
+  transform: scale(1.2);
+}
+
+/* Input */
+input {
+  width: 100%;
+  padding: 20px;
+  font-size: 22px;
+  border-radius: 16px;
+  border: none;
+  outline: none;
+}
+
+/* Buttons */
+.buttons {
+  margin-top: 30px;
+}
+
+button.action {
+  padding: 18px 40px;
+  font-size: 18px;
+  border-radius: 20px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 8px;
+  color: white;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+button.action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+}
+
+#checkBtn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+#nextBtn {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+}
+
+/* Feedback */
+.feedback {
+  font-size: 22px;
+  margin-top: 22px;
+  min-height: 30px;
+  font-weight: 600;
+}
+
+.correct {
+  color: #22c55e;
+  animation: pulse .5s ease;
+}
+
+.wrong {
+  color: #fb7185;
+  animation: pulse .5s ease;
+}
+
+@keyframes pulse {
+  from { transform: scale(.95); opacity: .5; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* Settings Modal */
+.settings {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings.active {
+  display: flex;
+  animation: fadeIn .3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.settings-box {
+  background: rgba(30,41,59,0.95);
+  padding: 30px;
+  border-radius: 20px;
+  width: 320px;
+  text-align: center;
+  color: white;
+}
+
+.toggle {
+  margin-top: 20px;
+}
+
+.toggle input {
+  transform: scale(1.4);
+  margin-right: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
+
+  <h1>🇫🇷 Französisch Vokabeltrainer</h1>
+
+  <div class="vocab" id="vocab">Klicke auf „Nächstes Wort“</div>
+  <button id="starBtn" class="star-btn">☆</button>
+
+  <input id="answerInput" type="text" placeholder="Französische Übersetzung eingeben">
+
+  <div class="feedback" id="feedback"></div>
+
+  <div class="buttons">
+    <button class="action" id="checkBtn">Überprüfen</button>
+    <button class="action" id="nextBtn">Nächstes Wort</button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings" id="settings">
+  <div class="settings-box">
+    <h2>⚙️ Einstellungen</h2>
+
+    <div class="toggle">
+      <label>
+        <input type="checkbox" id="strictToggle">
+        Strenge Überprüfung
+      </label>
+    </div>
+
+    <div class="toggle">
+      <label>
+        <input type="checkbox" id="starOnlyToggle">
+        ⭐ Nur Stern-Wörter üben
+      </label>
+    </div>
+
+    <br>
+    <button class="action" onclick="toggleSettings()">Schließen</button>
+  </div>
+</div>
+
+<script>
+let strictMode = false;
+let starOnlyMode = false;
+
+const vocabList = [
+  { de: "der Beste / die Beste", fr: ["le meilleur", "la meilleure"] },
+  { de: "der Roboter", fr: ["le robot"] },
+  { de: "nur", fr: ["seulement"] },
+
+  { de: "können / dürfen", fr: ["pouvoir"] },
+  { de: "müssen", fr: ["devoir"] },
+  { de: "wollen", fr: ["vouloir"] },
+
+  { de: "eine gute / schlechte Note", fr: ["une bonne note", "une mauvaise note"] },
+  { de: "das Taschengeld", fr: ["l'argent de poche"] },
+  { de: "die Nachricht", fr: ["le message"] },
+
+  { de: "entscheiden", fr: ["decider"] },
+  { de: "sich konzentrieren", fr: ["se concentrer"] },
+  { de: "auswendig lernen / sich einprägen", fr: ["memoriser"] },
+
+  { de: "aufräumen / ordnen", fr: ["ranger"] },
+  { de: "die Sachen", fr: ["les affaires"] },
+  { de: "ohne", fr: ["sans"] },
+
+  { de: "das Problem", fr: ["le probleme"] },
+  { de: "die Lösung", fr: ["la solution"] },
+  { de: "erfinden", fr: ["inventer"] },
+
+  { de: "schwimmen", fr: ["nager"] },
+  { de: "jdm helfen", fr: ["aider qn"] }
+];
+
+
+let currentIndex = -1;
+
+const vocabEl = document.getElementById("vocab");
+const inputEl = document.getElementById("answerInput");
+const feedbackEl = document.getElementById("feedback");
+const starBtn = document.getElementById("starBtn");
+
+function normalize(text) {
+  return text.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function nextWord() {
+  const list = starOnlyMode ? vocabList.filter(v => v.star) : vocabList;
+
+  if (list.length === 0) {
+    vocabEl.textContent = "⭐ Keine markierten Wörter";
+    return;
+  }
+
+  let i;
+  do { i = Math.floor(Math.random() * list.length); }
+  while (vocabList.indexOf(list[i]) === currentIndex);
+
+  currentIndex = vocabList.indexOf(list[i]);
+
+  vocabEl.classList.add("fade");
+  setTimeout(() => {
+    vocabEl.textContent = vocabList[currentIndex].de;
+    vocabEl.classList.remove("fade");
+  }, 250);
+
+  starBtn.textContent = vocabList[currentIndex].star ? "★" : "☆";
+  inputEl.value = "";
+  feedbackEl.textContent = "";
+  feedbackEl.className = "feedback";
+}
+
+function checkAnswer() {
+  if (currentIndex === -1) return;
+
+  const user = normalize(inputEl.value);
+  const solutions = vocabList[currentIndex].fr.map(normalize);
+
+  const ok = strictMode
+    ? solutions.includes(user)
+    : user.split("/").every(p => solutions.includes(p.trim()));
+
+  if (ok) {
+    feedbackEl.textContent = "✅ Richtig";
+    feedbackEl.className = "feedback correct";
+  } else {
+    feedbackEl.textContent =
+      "❌ Richtig wäre: " + vocabList[currentIndex].fr.join(" / ");
+    feedbackEl.className = "feedback wrong";
+  }
+}
+
+starBtn.onclick = () => {
+  if (currentIndex === -1) return;
+  vocabList[currentIndex].star = !vocabList[currentIndex].star;
+  starBtn.textContent = vocabList[currentIndex].star ? "★" : "☆";
+};
+
+function toggleSettings() {
+  document.getElementById("settings").classList.toggle("active");
+}
+
+document.getElementById("strictToggle").onchange = e => {
+  strictMode = e.target.checked;
+};
+
+document.getElementById("starOnlyToggle").onchange = e => {
+  starOnlyMode = e.target.checked;
+  nextWord();
+};
+
+document.getElementById("checkBtn").onclick = checkAnswer;
+document.getElementById("nextBtn").onclick = nextWord;
+
+inputEl.addEventListener("keydown", e => {
+  if (e.key === "Enter") checkAnswer();
+});
+</script>
+
+</body>
+</html>
